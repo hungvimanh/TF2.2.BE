@@ -79,7 +79,7 @@ namespace TwelveFinal.Services.MStudentService
         private async Task<bool> ValidateEmail(Student student)
         {
             //Validate Format cuả Email
-            if (!Utils.IsValidEmail(student.Email))
+            if (!IsValidEmail(student.Email))
             {
                 student.AddError(nameof(StudentValidator), nameof(student.Email), ErrorCode.Invalid);
             }
@@ -168,6 +168,17 @@ namespace TwelveFinal.Services.MStudentService
 
             return student.IsValidated;
         }
-
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

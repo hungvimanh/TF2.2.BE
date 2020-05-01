@@ -33,7 +33,7 @@ namespace TwelveFinal.Repositories.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("data source=.;initial catalog=TF;persist security info=True;user id=sa;password=123456a@;multipleactiveresultsets=True;");
+                optionsBuilder.UseSqlServer("data source=112.137.129.216,1699;initial catalog=TF;persist security info=True;user id=sa;password=123456a@;multipleactiveresultsets=True;");
             }
         }
 
@@ -43,11 +43,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<AspirationDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_FormDetail")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -79,14 +74,7 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<DistrictDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_District")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.CX).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Code)
                     .IsRequired()
@@ -105,11 +93,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<EthnicDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_Ethnic")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -125,16 +108,9 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<FormDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_Form")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Area)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.Area).HasMaxLength(10);
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
 
@@ -142,9 +118,7 @@ namespace TwelveFinal.Repositories.Models
 
                 entity.Property(e => e.Languages).HasMaxLength(50);
 
-                entity.Property(e => e.PriorityType)
-                    .IsRequired()
-                    .HasMaxLength(2);
+                entity.Property(e => e.PriorityType).HasMaxLength(2);
 
                 entity.HasOne(d => d.ClusterContest)
                     .WithMany(p => p.Forms)
@@ -167,11 +141,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<HighSchoolDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_HighSchool")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(500);
@@ -193,11 +162,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<MajorsDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_Majors")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -213,11 +177,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<ProvinceDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_Province")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -233,11 +192,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<StudentDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_Student")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(500);
@@ -280,11 +234,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<SubjectGroupDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_SubjectGroup")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -300,11 +249,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<TownDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("IX_Town")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -326,11 +270,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<UniversityDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_University")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(500);
@@ -350,11 +289,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<University_MajorsDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_University_Majors")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -378,11 +312,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<University_Majors_SubjectGroupDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_University_Majors_Year_SubjectGroup")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -404,11 +333,6 @@ namespace TwelveFinal.Repositories.Models
 
             modelBuilder.Entity<UserDAO>(entity =>
             {
-                entity.HasIndex(e => e.CX)
-                    .HasName("CX_User")
-                    .IsUnique()
-                    .HasAnnotation("SqlServer:Clustered", true);
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CX).ValueGeneratedOnAdd();
@@ -434,16 +358,6 @@ namespace TwelveFinal.Repositories.Models
             modelBuilder.Entity<__MigrationLogDAO>(entity =>
             {
                 entity.HasKey(e => new { e.migration_id, e.complete_dt, e.script_checksum });
-
-                entity.HasIndex(e => e.complete_dt)
-                    .HasName("IX___MigrationLog_CompleteDt");
-
-                entity.HasIndex(e => e.sequence_no)
-                    .HasName("UX___MigrationLog_SequenceNo")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.version)
-                    .HasName("IX___MigrationLog_Version");
 
                 entity.Property(e => e.script_checksum).HasMaxLength(64);
 

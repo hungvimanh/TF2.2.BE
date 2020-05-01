@@ -52,9 +52,6 @@ namespace TwelveFinal.Repositories
                         case DistrictOrder.Name:
                             query = query.OrderBy(q => q.Name);
                             break;
-                        default:
-                            query = query.OrderBy(q => q.CX);
-                            break;
                     }
                     break;
                 case OrderType.DESC:
@@ -66,13 +63,7 @@ namespace TwelveFinal.Repositories
                         case DistrictOrder.Name:
                             query = query.OrderByDescending(q => q.Name);
                             break;
-                        default:
-                            query = query.OrderByDescending(q => q.CX);
-                            break;
                     }
-                    break;
-                default:
-                    query = query.OrderBy(q => q.CX);
                     break;
             }
             query = query.Skip(districtFilter.Skip).Take(districtFilter.Take);

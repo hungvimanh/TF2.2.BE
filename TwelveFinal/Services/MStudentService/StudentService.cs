@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TwelveFinal.Common;
 using TwelveFinal.Entities;
@@ -33,11 +34,14 @@ namespace TwelveFinal.Services.MStudentService
         private readonly IUOW UOW;
         private IStudentValidator StudentValidator;
         private ICurrentContext CurrentContext;
-        public StudentService(IUOW UOW, IStudentValidator StudentValidator, ICurrentContext CurrentContext)
+        private IMailService MailService;
+
+        public StudentService(IUOW UOW, IStudentValidator StudentValidator, ICurrentContext CurrentContext, IMailService MailService)
         {
             this.UOW = UOW;
             this.StudentValidator = StudentValidator;
             this.CurrentContext = CurrentContext;
+            this.MailService = MailService;
         }
         #region Register
         public async Task<Student> Register(Student student)
@@ -63,7 +67,12 @@ namespace TwelveFinal.Services.MStudentService
                 await UOW.UserRepository.Create(user);
 
                 await UOW.Commit();
-                await Utils.RegisterMail(user);
+                var Mail = new Mail();
+                Mail.Recipients = new List<string> { user.Email };
+                Mail.Subject = "Tạo tài khoản TF";
+                Mail.Body = $"Tài khoản của bạn đã được tạo. Username: {user.Username} Password: {user.Password}";
+                Thread sendMailThread = new Thread(() => MailService.Send(Mail));
+                sendMailThread.Start();
                 return await UOW.StudentRepository.Get(student.Id);
             }
             catch (Exception ex)
@@ -140,6 +149,7 @@ namespace TwelveFinal.Services.MStudentService
         #region Import From Excel
         public async Task<bool> ImportExcel(byte[] file)
         {
+            return true;
             //Tạo nhiều tài khoản thí sinh từ file excel
             List<Student> students = await LoadFromExcel(file);
             try
@@ -164,7 +174,7 @@ namespace TwelveFinal.Services.MStudentService
                 await UOW.StudentRepository.BulkInsert(students);
                 await UOW.UserRepository.BulkInsert(users);
                 await UOW.Commit();
-                users.ForEach(u => Utils.RegisterMail(u));
+                //users.ForEach(u => Utils.RegisterMail(u));
                 return true;
             }
             catch (Exception ex)

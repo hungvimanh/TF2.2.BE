@@ -20,6 +20,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using TwelveFinal.Config;
 
 namespace TwelveFinal
 {
@@ -77,6 +78,10 @@ namespace TwelveFinal
                      .WithScopedLifetime());
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            var emailConfig = Configuration
+               .GetSection("EmailConfig")
+               .Get<EmailConfig>();
+            services.AddSingleton(emailConfig);
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.JWTSecret);
             services.AddAuthentication(x =>

@@ -172,6 +172,16 @@ namespace TwelveFinal.Repositories
 
             tFContext.Student.Add(studentDAO);
             await tFContext.SaveChangesAsync();
+            FormDAO FormDAO = new FormDAO
+            {
+                Id = Guid.NewGuid(),
+                StudentId = student.Id,
+                Status = 0,
+                ClusterContestId = tFContext.Province.Where(x => x.Name == student.PlaceOfBirth).Select(x => x.Id).FirstOrDefault(),
+                RegisterPlaceOfExamId = student.HighSchoolId.Value
+            };
+            tFContext.Form.Add(FormDAO);
+            await tFContext.SaveChangesAsync();
             return true;
         }
 
@@ -212,6 +222,7 @@ namespace TwelveFinal.Repositories
         public async Task<bool> Delete(Guid Id)
         {
             await tFContext.User.Where(u => u.StudentId.Equals(Id)).DeleteFromQueryAsync();
+            await tFContext.Form.Where(u => u.StudentId.Equals(Id)).DeleteFromQueryAsync();
             await tFContext.Student.Where(s => s.Id.Equals(Id)).DeleteFromQueryAsync();
             return true;
         }

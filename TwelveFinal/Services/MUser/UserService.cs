@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TwelveFinal.Common;
 using TwelveFinal.Entities;
@@ -35,12 +36,14 @@ namespace TwelveFinal.Services.MUser
         private IDateTimeService DateTimeService;
         private readonly IUOW UOW;
         private IUserValidator UserValidator;
-        public UserService(IUOW _UOW, IDateTimeService dateTimeService, IOptions<AppSettings> options, IUserValidator userValidator)
+        private IMailService MailService;
+        public UserService(IUOW _UOW, IDateTimeService dateTimeService, IOptions<AppSettings> options, IUserValidator userValidator, IMailService MailService)
         {
             this.UOW = _UOW;
             this.DateTimeService = dateTimeService;
             this.appSettings = options.Value;
             UserValidator = userValidator;
+            this.MailService = MailService;
         }
 
         public async Task<User> Login(UserFilter userFilter)
@@ -85,10 +88,26 @@ namespace TwelveFinal.Services.MUser
             User user = await UOW.UserRepository.Get(userFilter);
             if (user == null) throw new BadRequestException("Id không tồn tại");
             if (!userFilter.Email.Equals(user.Email)) throw new BadRequestException("Email không đúng!");
-            user.Password = Utils.GeneratePassword();
-            user.Salt = null;
-            await UOW.UserRepository.ChangePassword(user);
-            await Utils.RecoveryPasswordMail(user);
+            try
+            {
+                user.Password = GeneratePassword();
+                user.Salt = null;
+                await UOW.UserRepository.ChangePassword(user);
+                var Mail = new Mail();
+                Mail.Recipients = new List<string> { userFilter.Email };
+                Mail.Subject = "Recovery Password";
+                Mail.Body = $"Mật khẩu của bạn đã được khôi phục. Mật khẩu mới là {user.Password}";
+                Thread sendMailThread = new Thread(() => MailService.Send(Mail));
+                sendMailThread.Start();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    throw new MessageException(ex);
+                else
+                    throw new MessageException(ex.InnerException);
+            }
+            
             return true;
         }
 
@@ -145,7 +164,17 @@ namespace TwelveFinal.Services.MUser
             return user;
         }
 
-
+        private string GeneratePassword()
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
 
     }
 }
