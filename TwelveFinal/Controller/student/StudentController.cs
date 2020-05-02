@@ -343,10 +343,10 @@ namespace TwelveFinal.Controller.student
         public async Task<FormDTO> ViewForm([FromBody] ViewRegisterFormDTO viewRegisterFormDTO)
         {
             if (viewRegisterFormDTO == null) viewRegisterFormDTO = new ViewRegisterFormDTO();
-            Student student = new Student { Id = viewRegisterFormDTO.StudentId };
+            Student student = new Student { Id = viewRegisterFormDTO.Id };
             student = await StudentService.GetById(student.Id);
 
-            Form form = new Form { StudentId = viewRegisterFormDTO.StudentId };
+            Form form = new Form { StudentId = viewRegisterFormDTO.Id };
 
             form = await FormService.Get(form.StudentId);
             return new FormDTO

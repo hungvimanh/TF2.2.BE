@@ -7,6 +7,6 @@ namespace TwelveFinal.Controller.student
 {
     public class ViewRegisterFormDTO : DataDTO
     {
-        public Guid StudentId { get; set; }
+        public Guid Id { get; set; }
     }
 }
