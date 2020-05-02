@@ -45,7 +45,7 @@ namespace TwelveFinal.Controller.student
 
             registerDTO = new RegisterDTO
             {
-                StudentId = student.Id,
+                Id = student.Id,
                 Dob = student.Dob.Date,
                 Email = student.Email,
                 Name = student.Name,

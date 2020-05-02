@@ -7,7 +7,7 @@ namespace TwelveFinal.Controller.DTO
 {
     public class RegisterDTO : DataDTO
     {
-        public Guid StudentId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public bool Gender { get; set; }
         public DateTime Dob { get; set; }
