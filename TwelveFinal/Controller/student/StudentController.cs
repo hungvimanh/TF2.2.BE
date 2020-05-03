@@ -134,14 +134,44 @@ namespace TwelveFinal.Controller.student
         }
 
         [Route(StudentRoute.UploadAvatar), HttpPost]
-        public async Task<bool> UploadAvatar([FromBody] StudentDTO studentDTO)
+        public async Task<ActionResult<StudentDTO>> UploadAvatar([FromBody] StudentDTO studentDTO)
         {
             Student student = new Student
             {
                 Image = studentDTO.Image != null ? Encoding.UTF8.GetBytes(studentDTO.Image) : null
             };
             student = await StudentService.UploadAvatar(student);
-            return student == null ? false : true;
+            if (student.HasError)
+                return BadRequest(studentDTO);
+            return student == null ? null : new StudentDTO()
+            {
+                Id = student.Id,
+                Address = student.Address,
+                Dob = student.Dob.Date,
+                Gender = student.Gender,
+                Email = student.Email,
+                Identify = student.Identify,
+                PlaceOfBirth = student.PlaceOfBirth,
+                Name = student.Name,
+                Phone = student.Phone,
+                Image = student.Image == null ? null : Encoding.UTF8.GetString(student.Image),
+                EthnicId = student.EthnicId,
+                EthnicName = student.EthnicName,
+                EthnicCode = student.EthnicCode,
+                HighSchoolId = student.HighSchoolId,
+                HighSchoolName = student.HighSchoolName,
+                HighSchoolCode = student.HighSchoolCode,
+                TownId = student.TownId,
+                TownCode = student.TownCode,
+                TownName = student.TownName,
+                DistrictId = student.DistrictId,
+                DistrictCode = student.DistrictCode,
+                DistrictName = student.DistrictName,
+                ProvinceId = student.ProvinceId,
+                ProvinceCode = student.ProvinceCode,
+                ProvinceName = student.ProvinceName,
+                Status = student.Status
+            };
         }
         #endregion
 
